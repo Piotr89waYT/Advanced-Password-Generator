@@ -3,6 +3,9 @@
 # Python Password Generator. It generates a Password for you bassed off a few user made inputs and then exports them into a text file.
 
 import random
+import time
+import datetime
+import os
 
 # BACK END
 
@@ -34,32 +37,103 @@ def PasswordGenerator():
 
     if savePass == 'y':
         print("Saving password.")
-        with open("GeneratedPassword.txt", "a") as f:           # After file generates it will add the content of the generated password into the file
-            f.write(GeneratedPassword)
+        with open("GeneratedPassword.txt", "a") as f:
+            x = datetime.datetime.now()           
+            f.write(f"Password Generated on: {x.strftime("%a %d %b %y. At: %H:%I")} Password: {GeneratedPassword}\n")           # After file generates it will add the content of the generated password into the file
     elif savePass == 'n':
         print("Ok, thank you for using my Password Generator.")
         
     return
 
+def OTP():
+
+    # List of all alphabet letters. ALl symbols and all numbers
+    letters = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+    numbers = list("0123456789")
+    symbols = list("`-=[]\\;',./~!@#$%^&*()_+{}|:\"<>?")
+    char_pool = letters + numbers + symbols
+
+    
+    # Parameters for the otp? Like length of the password.
+    
+
+    # print the OTP
+    OTPGenerator = ''.join(random.choices(char_pool, k = 8))        # Randomly pick a range of letters, symbols and numbers and shuffle them around.
+    print(f"Your One Time Password is: {OTPGenerator}")
+
+    # Ask if you want to save the OTP
+    saveOTP = input("Would you like to save the One time password? (Y/N)").lower()
+
+    if saveOTP == 'y':
+        print("Saving OTP.")
+        with open("LoggedOTPs.txt", "a") as f: 
+            x = datetime.datetime.now()                                                    
+            f.write(f"One Time Password Generated on: {x.strftime("%a %d %b %y. At: %H:%I")} Password: {OTPGenerator}\n")    # After file generates it will add the content of the OTP into the file including when the password was created
+            print("Ok, One Time Password Saved.")
+    elif saveOTP == 'n':
+        print("Ok, we woun't save it.")
+    
+    # Implement a timer that will regenerate the OTP after 5 minutes and save it to the file, if one is made.
+
+    return
 
 # FRONT END
 
+name = input("Hi, Whats your name?: ")      # Asks the user what their name is.
 
-# Welcome Screen
-name = input("Hi, Whats your name?: ")                      # Asks the user what their name is.
-print(f"Hello {name}")                                      # Welcomes the User.
+# Option screen.
 
-# Make password? Question
 while True:
-    make_password = input("Do you want me to make you a password? (Y/N): ").strip().lower()
 
-    if make_password == 'y':
-        print("Fantastic let's continue")
-        PasswordQuestion()
-        PasswordGenerator()
+    # menu look 
+    print()
+    print(f"Hey {name} welcome to:") # Will add ASCII Art for the Logo and name.
+    print()
+    print("**MENU**")
+    print("Select an Option.")
+    print("P = Password Generator")
+    print("O = One Time Password Generator")
+    print("C = Cleans all the generated password logs.")
+    print("?P = Opens your GeneratedPassword.txt if one exists.")
+    print("?O = Opens your LoggedOTPs.txt if one exists.")
+    print("X = Closes the program")
+
+    menu = input("Select your option: ").lower() # input for the menu
+
+    if menu == 'p':
+            print("Fantastic")
+            PasswordQuestion()
+            PasswordGenerator()  
+    
+    elif menu == 'o':
+        print("Ok, let me generate you a one time password.")
+        OTP()
+    
+    elif menu == '?p':
+        print("Opening GeneratedPassword.txt")
+        if os.path.exists("GeneratedPassword.txt"): # Fix not finding file
+            f = open("GenerartedPassword.txt") # Open file in notepad
+        else:
+            print("File not found.")
+    
+    elif menu == '?o':
+        print("Opening LoggedOTPs.txt")
+        if os.path.exists("LoggedOTPs.txt"): # Fix not finding file
+            f = open("LoggedOTPs.txt")  # Open file in notepad
+        else:
+            print("File not found.")
+    
+    elif menu == 'c':
+        print("Cleaning log files...")
+        files = ['GeneratedPassword.txt', 'LoggedOTPs.txt']
+        for file_name in files:
+                if os.path.exists(file_name):
+                    os.remove(file_name)
+                    print("Files Removed")
+        else:
+            print("No files to be removed.")
+            time.sleep(5)
+    elif menu == 'x':
+        print("Program shutting down...")
+        time.sleep(5)
         break
-    elif make_password == 'n':
-        print("Well Ok, Thanks for trying my program")
-        break
-    else:
-        print("Please answer YES 'Y' or NO 'N'")
