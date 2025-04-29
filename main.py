@@ -32,6 +32,8 @@ def PasswordGenerator():
     
     print("Your password is:", GeneratedPassword)     # Shows the password on screen.
 
+    # Enrtopy calculator.
+
     # Ask if you want to save
     savePass = input("Would you like to save the password? (Y/N)").lower()
 
@@ -55,12 +57,20 @@ def OTP():
 
     
     # Parameters for the otp? Like length of the password.
+
+    while True:
+        OTPlength = input("How many characters do you want the password to be?")
+        try:
+            OTPlength = int(OTPlength)
+            break
+        except ValueError:
+            print("Needs to be a NUMBER.")
+            
+        
     
-
     # print the OTP
-    OTPGenerator = ''.join(random.choices(char_pool, k = 8))        # Randomly pick a range of letters, symbols and numbers and shuffle them around.
+    OTPGenerator = ''.join(random.choices(char_pool, k = OTPlength))        # Randomly pick a range of letters, symbols and numbers and shuffle them around.
     print(f"Your One Time Password is: {OTPGenerator}")
-
     # Ask if you want to save the OTP
     saveOTP = input("Would you like to save the One time password? (Y/N)").lower()
 
@@ -71,7 +81,7 @@ def OTP():
             f.write(f"One Time Password Generated on: {x.strftime("%a %d %b %y. At: %H:%I")} Password: {OTPGenerator}\n")    # After file generates it will add the content of the OTP into the file including when the password was created
             print("Ok, One Time Password Saved.")
     elif saveOTP == 'n':
-        print("Ok, we woun't save it.")
+        print("Ok, we won't save it.")
     
     # Implement a timer that will regenerate the OTP after 5 minutes and save it to the file, if one is made.
 
@@ -89,14 +99,16 @@ while True:
     print()
     print(f"Hey {name} welcome to:") # Will add ASCII Art for the Logo and name.
     print()
-    print("**MENU**")
-    print("Select an Option.")
-    print("P = Password Generator")
-    print("O = One Time Password Generator")
-    print("C = Cleans all the generated password logs.")
-    print("?P = Opens your GeneratedPassword.txt if one exists.")
-    print("?O = Opens your LoggedOTPs.txt if one exists.")
-    print("X = Closes the program")
+    print('''
+**MENU**"
+Select an Option.
+P = Password Generator"
+O = One Time Password Generator
+C = Cleans all the generated password logs.
+?P = Opens your GeneratedPassword.txt if one exists.
+?O = Opens your LoggedOTPs.txt if one exists.
+X = Closes the program 
+''')
 
     menu = input("Select your option: ").lower() # input for the menu
 
