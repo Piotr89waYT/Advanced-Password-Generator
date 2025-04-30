@@ -23,7 +23,7 @@ import os
 import math
 
 # BACK END
-
+# Calculates how strong the generated passwords are.
 def password_entropy(password: str) -> float:
     charset_size = 0
     has_lower = any(c.islower() for c in password)
@@ -58,6 +58,18 @@ def password_entropy(password: str) -> float:
         strength = "Very Strong" 
 
     return entropy, strength
+
+# Calculates how strong the users personal  passwords are.
+def personal_entropy():
+
+    userpass = input("Input the password so we can calculate the strength for you: ")
+    entropy, strength = password_entropy(userpass)
+    
+    print(f"The BIT strength of your password is: {entropy} which means your password is {strength}")
+    
+    time.sleep(10)
+    
+    return
 
 # Function that will ask the questions for the password.
 def PasswordQuestion():
@@ -154,9 +166,10 @@ while True:
     print('''
 **MENU**"
 Select an Option.
-P = Password Generator"
+P = Password Generator
 O = One Time Password Generator
 C = Cleans all the generated password logs.
+U = Password Strength Calculator. Test if your password is strong.
 ?P = Opens your GeneratedPassword.txt if one exists.
 ?O = Opens your LoggedOTPs.txt if one exists.
 X = Closes the program 
@@ -173,20 +186,6 @@ X = Closes the program
         print("Ok, let me generate you a one time password.")
         OTP()
     
-    elif menu == '?p':
-        print("Opening GeneratedPassword.txt")
-        if os.path.exists("GeneratedPassword.txt"): # Fix not finding file
-            f = open("GenerartedPassword.txt") # Open file in notepad
-        else:
-            print("File not found.")
-    
-    elif menu == '?o':
-        print("Opening LoggedOTPs.txt")
-        if os.path.exists("LoggedOTPs.txt"): # Fix not finding file
-            f = open("LoggedOTPs.txt")  # Open file in notepad
-        else:
-            print("File not found.")
-    
     elif menu == 'c':
         print("Cleaning log files...")
         files = ['GeneratedPassword.txt', 'LoggedOTPs.txt']
@@ -197,6 +196,23 @@ X = Closes the program
         else:
             print("No files to be removed.")
             time.sleep(5)
+    
+    elif menu == 'u':
+        personal_entropy() 
+
+    elif menu == '?o':
+        print("Opening LoggedOTPs.txt")
+        if os.path.exists("LoggedOTPs.txt"): # Fix not finding file
+            f = open("LoggedOTPs.txt")  # Open file in notepad
+        else:
+            print("File not found.")
+    
+    elif menu == '?p':
+        print("Opening GeneratedPassword.txt")
+        if os.path.exists("GeneratedPassword.txt"): # Fix not finding file
+            f = open("GenerartedPassword.txt") # Open file in notepad
+        else:
+            print("File not found.")
     
     elif menu == 'x':
         print("Program shutting down...")
