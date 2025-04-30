@@ -1,19 +1,4 @@
-                # "While loops go back on themselves. Thats all that loops are, they repeat themselves" - Maky, probably #
-#####################################################################################################################################
-
-
-
-
-
-
-
-
-
-
-
-
-
-#####################################################################################################################################
+#"While loops go back on themselves. Thats all that loops are, they repeat themselves" - Maky, probably
 # Python Password Generator. It generates a Password for you bassed off a few user made inputs and then exports them into a text file.
 
 import random
@@ -21,6 +6,7 @@ import time
 import datetime
 import os
 import math
+import webbrowser
 
 # BACK END
 # Calculates how strong the generated passwords are.
@@ -68,6 +54,8 @@ def personal_entropy():
     print(f"The BIT strength of your password is: {entropy} which means your password is {strength}")
     
     time.sleep(10)
+
+    os.system('cls')
     
     return
 
@@ -105,8 +93,12 @@ def PasswordGenerator():
         with open("GeneratedPassword.txt", "a") as f:
             x = datetime.datetime.now()           
             f.write(f"Password Generated on: {x.strftime("%a %d %b %y. At: %H:%M")} Password: {GeneratedPassword} with an Entropy Score of: {entropy} which means the passwords is {strength}\n")           # After file generates it will add the content of the generated password into the file
+            time.sleep(3)
+            os.system('cls')
     elif savePass == 'n':
         print("Ok, thank you for using my Password Generator.")
+        time.sleep(3)
+        os.system('cls')
         
     return
 
@@ -122,7 +114,7 @@ def OTP():
     # Parameters for the otp
 
     while True:
-        OTPlength = input("How many characters do you want the password to be?")
+        OTPlength = input("How many characters do you want the password to be?: ")
         try:
             OTPlength = int(OTPlength)
             break
@@ -136,7 +128,7 @@ def OTP():
     print(f"Your One Time Password is: {OTPGenerator} with a Entropy Score of: {entropy} which means your password is {strength}")
     
     # Ask if you want to save the OTP
-    saveOTP = input("Would you like to save the One time password? (Y/N)").lower()
+    saveOTP = input("Would you like to save the One time password? (Y/N): ").lower()
 
     if saveOTP == 'y':
         print("Saving OTP.")
@@ -144,8 +136,12 @@ def OTP():
             x = datetime.datetime.now()                                                    
             f.write(f"One Time Password Generated on: {x.strftime("%a %d %b %y. At: %H:%I")} Password: {OTPGenerator} with a Entropy Score of: {entropy} which means the password is {strength}\n")    # After file generates it will add the content of the OTP into the file including when the password was created
             print("Ok, One Time Password Saved.")
+            time.sleep(3)
+            os.system('cls')
     elif saveOTP == 'n':
         print("Ok, we won't save it.")
+        time.sleep(3)
+        os.system('cls')
     
     # Implement a timer that will regenerate the OTP after 5 minutes and save it to the file, if one is made.
 
@@ -178,15 +174,18 @@ X = Closes the program
     menu = input("Select your option: ").lower() # input for the menu
 
     if menu == 'p':
+            os.system('cls')
             print("Fantastic")
             PasswordQuestion()
             PasswordGenerator()  
     
     elif menu == 'o':
+        os.system('cls')
         print("Ok, let me generate you a one time password.")
         OTP()
     
     elif menu == 'c':
+        os.system('cls')
         print("Cleaning log files...")
         files = ['GeneratedPassword.txt', 'LoggedOTPs.txt']
         for file_name in files:
@@ -195,26 +194,34 @@ X = Closes the program
                     print("Files Removed")
         else:
             print("No files to be removed.")
-            time.sleep(5)
+            time.sleep(3)
     
     elif menu == 'u':
+        os.system('cls')
         personal_entropy() 
 
     elif menu == '?o':
+        os.system('cls')
         print("Opening LoggedOTPs.txt")
         if os.path.exists("LoggedOTPs.txt"): # Fix not finding file
-            f = open("LoggedOTPs.txt")  # Open file in notepad
-        else:
+            webbrowser.open("LoggedOTPs.txt")
+        if not os.path.exists("LoggedOTPs.txt"):
             print("File not found.")
+            time.sleep(3)
+            os.system('cls')
     
     elif menu == '?p':
+        os.system('cls')
         print("Opening GeneratedPassword.txt")
         if os.path.exists("GeneratedPassword.txt"): # Fix not finding file
-            f = open("GenerartedPassword.txt") # Open file in notepad
-        else:
+            webbrowser.open("GeneratedPassword.txt")
+        if not os.path.exists("GeneratedPassword.txt"):
             print("File not found.")
+            time.sleep(3)
+            os.system('cls')
     
     elif menu == 'x':
+        os.system('cls')
         print("Program shutting down...")
-        time.sleep(5)
+        time.sleep(3)
         break
