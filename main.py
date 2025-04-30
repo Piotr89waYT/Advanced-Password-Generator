@@ -1,13 +1,63 @@
-# "While loops go back on themselves. Thats all that loops are, they repeat themselves" - Maky, probably
+                # "While loops go back on themselves. Thats all that loops are, they repeat themselves" - Maky, probably #
+#####################################################################################################################################
 
+
+
+
+
+
+
+
+
+
+
+
+
+#####################################################################################################################################
 # Python Password Generator. It generates a Password for you bassed off a few user made inputs and then exports them into a text file.
 
 import random
 import time
 import datetime
 import os
+import math
 
 # BACK END
+
+def password_entropy(password: str) -> float:
+    charset_size = 0
+    has_lower = any(c.islower() for c in password)
+    has_upper = any(c.isupper() for c in password)
+    has_digit = any(c.isdigit() for c in password)
+    has_symbol = any(not c.isalnum() for c in password)
+
+    if has_lower:
+        charset_size += 26
+    if has_upper:
+        charset_size += 26
+    if has_digit:
+        charset_size += 10
+    if has_symbol:
+        charset_size += 33  # Roughly printable special chars
+
+    if charset_size == 0:
+        return 0.0
+
+
+    entropy = len(password) * math.log2(charset_size)
+
+    if entropy < 28:
+        strength = "Very weak"
+    elif entropy < 36:
+        strength = "Weak"
+    elif entropy < 60:
+        strength = "Reasonable"
+    elif entropy < 128:
+        strength = "Strong"
+    else:
+        strength = "Very Strong" 
+
+    return entropy, strength
 
 # Function that will ask the questions for the password.
 def PasswordQuestion():
@@ -30,18 +80,19 @@ def PasswordGenerator():
     random.shuffle(questions)
     GeneratedPassword = ''.join(questions)
     
-    print("Your password is:", GeneratedPassword)     # Shows the password on screen.
-
     # Enrtopy calculator.
+    entropy, strength = password_entropy(GeneratedPassword)
+
+    print(f"Your password is: {GeneratedPassword}. It's Entropy score is {entropy} which means your password is {strength}")     # Shows the password on screen.
 
     # Ask if you want to save
-    savePass = input("Would you like to save the password? (Y/N)").lower()
+    savePass = input("Would you like to save the password? (Y/N): ").lower()
 
     if savePass == 'y':
         print("Saving password.")
         with open("GeneratedPassword.txt", "a") as f:
             x = datetime.datetime.now()           
-            f.write(f"Password Generated on: {x.strftime("%a %d %b %y. At: %H:%I")} Password: {GeneratedPassword}\n")           # After file generates it will add the content of the generated password into the file
+            f.write(f"Password Generated on: {x.strftime("%a %d %b %y. At: %H:%M")} Password: {GeneratedPassword} with an Entropy Score of: {entropy} which means the passwords is {strength}\n")           # After file generates it will add the content of the generated password into the file
     elif savePass == 'n':
         print("Ok, thank you for using my Password Generator.")
         
@@ -56,7 +107,7 @@ def OTP():
     char_pool = letters + numbers + symbols
 
     
-    # Parameters for the otp? Like length of the password.
+    # Parameters for the otp
 
     while True:
         OTPlength = input("How many characters do you want the password to be?")
@@ -66,11 +117,12 @@ def OTP():
         except ValueError:
             print("Needs to be a NUMBER.")
             
-        
-    
     # print the OTP
     OTPGenerator = ''.join(random.choices(char_pool, k = OTPlength))        # Randomly pick a range of letters, symbols and numbers and shuffle them around.
-    print(f"Your One Time Password is: {OTPGenerator}")
+    entropy, strength = password_entropy(OTPGenerator)
+    
+    print(f"Your One Time Password is: {OTPGenerator} with a Entropy Score of: {entropy} which means your password is {strength}")
+    
     # Ask if you want to save the OTP
     saveOTP = input("Would you like to save the One time password? (Y/N)").lower()
 
@@ -78,7 +130,7 @@ def OTP():
         print("Saving OTP.")
         with open("LoggedOTPs.txt", "a") as f: 
             x = datetime.datetime.now()                                                    
-            f.write(f"One Time Password Generated on: {x.strftime("%a %d %b %y. At: %H:%I")} Password: {OTPGenerator}\n")    # After file generates it will add the content of the OTP into the file including when the password was created
+            f.write(f"One Time Password Generated on: {x.strftime("%a %d %b %y. At: %H:%I")} Password: {OTPGenerator} with a Entropy Score of: {entropy} which means the password is {strength}\n")    # After file generates it will add the content of the OTP into the file including when the password was created
             print("Ok, One Time Password Saved.")
     elif saveOTP == 'n':
         print("Ok, we won't save it.")
@@ -145,6 +197,7 @@ X = Closes the program
         else:
             print("No files to be removed.")
             time.sleep(5)
+    
     elif menu == 'x':
         print("Program shutting down...")
         time.sleep(5)
