@@ -5,6 +5,6 @@ A advanced version of a small Python project my friend got me to make.
 
 v1.0 = Terminal Software, Runs on main.py in any directory. Source Code in Branch v1.0
 
-v2.0 = GUI Software, Runs on PassGen.exe.
+v2.0 = GUI Software, Runs on PassGen.exe. Written perfectly in 666 lines.
 
 # VirusTotal
