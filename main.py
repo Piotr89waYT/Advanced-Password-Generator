@@ -1,12 +1,15 @@
 #"While loops go back on themselves. Thats all that loops are, they repeat themselves" - Maky, probably
 # Python Password Generator. It generates a Password for you bassed off a few user made inputs and then exports them into a text file.
 # Vibe coding went crazy for this 🔥🔥🔥🔥🔥🔥🔥🔥
+
 import random
 import time
 import datetime
 import os
 import math
 import webbrowser
+
+
 
 import tkinter as tk
 from tkinter import PhotoImage, Image
@@ -62,51 +65,6 @@ def personal_entropy():
     
     return
 
-# Function that will ask the questions for the password.
-# def PasswordQuestion():
-    print("Im going to ask you some questions. Answer them how ever you like, Keep in mind all your answers will affect your password and it's length.")
-
-    global word, rng, symbol, color, shape # Makes the answers global.
-
-    '''word = input("Write down a word. It can be anything you like. Answer: ")                  # Word
-    rng =  input("Write down a random number. Answer: ")                                         # Random Number
-    symbol = input("Write down a special character or symbol. Answer: ")                         # Random Symbol
-    color = input("write down a color, It can be your favourite or it can be random Answer: ")   # Color
-    shape = input("Write down a shape, any shape Answer: ")'''                                   # Shape
-    
-    PasswordGenerator()
-
-    return 
-
-# Password Generator
-def PasswordGenerator():
-    
-    questions = [word, rng, symbol, color, shape]      # List with variables from questions.
-    random.shuffle(questions)
-    GeneratedPassword = ''.join(questions)
-    
-    # Enrtopy calculator.
-    entropy, strength = password_entropy(GeneratedPassword)
-
-    print(f"Your password is: {GeneratedPassword}. It's Entropy score is {entropy} which means your password is {strength}")     # Shows the password on screen.
-
-    # Ask if you want to save
-    savePass = input("Would you like to save the password? (Y/N): ").lower()
-
-    if savePass == 'y':
-        print("Saving password.")
-        with open("GeneratedPassword.txt", "a") as f:
-            x = datetime.datetime.now()           
-            f.write(f"Password Generated on: {x.strftime('%a %d %b %y. At: %H:%M')} Password: {GeneratedPassword} with an Entropy Score of: {entropy} which means the passwords is {strength}\n")           # After file generates it will add the content of the generated password into the file
-            time.sleep(3)
-            os.system('cls')
-    elif savePass == 'n':
-        print("Ok, thank you for using my Password Generator.")
-        time.sleep(3)
-        os.system('cls')
-        
-    return
-
 def savePassword(password: str, entropy: float, strength: str):
     """
     Saves the generated password along with its entropy and strength to a file.
@@ -127,51 +85,28 @@ def savePassword(password: str, entropy: float, strength: str):
     except Exception as e:
         print(f"An error occurred while saving the password: {e}")
 
-def OTP():
+def saveOTP(OTPGenerator: str, entropy: float, strength: str):
+    try:
+        print("Saving password...")
+        with open("LoggedOTPsS.txt", "a") as f:
+            x = datetime.datetime.now()
+            f.write(
+                f"Password Generated on: {x.strftime('%a %d %b %y. At: %H:%M')} "
+                f"Password: {OTPGenerator} with an Entropy Score of: {entropy:.2f} "
+                f"which means the password is {strength}\n"
+            )
+        print("Password saved successfully.")
+    except Exception as e:
+        print(f"An error occurred while saving the password: {e}")
 
-    # List of all alphabet letters. ALl symbols and all numbers
-    letters = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
-    numbers = list("0123456789")
-    symbols = list("`-=[]\\;',./~!@#$%^&*()_+{}|:\"<>?")
-    char_pool = letters + numbers + symbols
+def opengeneratedpass():
+    if os.path.exists("GeneratedPassword.txt"):
+        webbrowser.open("GeneratedPassword.txt")
 
-    
-    # Parameters for the otp
-
-    while True:
-        OTPlength = input("How many characters do you want the password to be?: ")
-        try:
-            OTPlength = int(OTPlength)
-            break
-        except ValueError:
-            print("Needs to be a NUMBER.")
-            
-    # print the OTP
-    OTPGenerator = ''.join(random.choices(char_pool, k = OTPlength))        # Randomly pick a range of letters, symbols and numbers and shuffle them around.
-    entropy, strength = password_entropy(OTPGenerator)
-    
-    print(f"Your One Time Password is: {OTPGenerator} with a Entropy Score of: {entropy} which means your password is {strength}")
-    
-    # Ask if you want to save the OTP
-    saveOTP = input("Would you like to save the One time password? (Y/N): ").lower()
-
-    if saveOTP == 'y':
-        print("Saving OTP.")
-        with open("LoggedOTPs.txt", "a") as f: 
-            x = datetime.datetime.now()                                                    
-            f.write(f"One Time Password Generated on: {x.strftime('%a %d %b %y. At: %H:%I')} Password: {OTPGenerator} with a Entropy Score of: {entropy} which means the password is {strength}\n")    # After file generates it will add the content of the OTP into the file including when the password was created
-            print("Ok, One Time Password Saved.")
-            time.sleep(3)
-            os.system('cls')
-    elif saveOTP == 'n':
-        print("Ok, we won't save it.")
-        time.sleep(3)
-        os.system('cls')
-    
-    # Implement a timer that will regenerate the OTP after 5 minutes and save it to the file, if one is made.
-
-    return
-
+def opengeneratedotp():
+    if os.path.exists("LoggedOTPs.txt"):
+        webbrowser.open("LoggedOTPs.txt")
+        
 def cleanupfunc():
         os.system('cls')
         print("Cleaning log files...")
@@ -183,6 +118,25 @@ def cleanupfunc():
         else:
             print("No files to be removed.")
             time.sleep(3)
+
+
+def generateOTP(otp_length: int = 12 ):
+    # List of all alphabet letters, symbols, and numbers
+    letters = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+    numbers = list("0123456789")
+    symbols = list("`-=[]\\;',./~!@#$%^&*()_+{}|:\"<>?")
+    char_pool = letters + numbers + symbols
+
+    global OTPGenerator, entropy, strength
+    
+    # Generate the OTP
+    OTPGenerator = ''.join(random.choices(char_pool, k=otp_length))
+    entropy, strength = password_entropy(OTPGenerator)
+
+    # Display the OTP and its details
+    print(f"Your One Time Password is: {OTPGenerator}")
+    print(f"Entropy Score: {entropy:.2f}, Password Strength: {strength}")
+
 
 
 # ===FRONT END===
@@ -227,6 +181,7 @@ def createButton(window, text, command, width=150, height=40, font=("Helvetica",
 def drawMainMenu():
     windowUpdate()  # Clear the window
     global mainMenuAccentPhoto  # Keep a reference to the image
+
 
     # Load the image
     mainMenuAccentPhoto = PhotoImage(file="./gui/placeholder.png")
@@ -279,7 +234,7 @@ def drawMainMenu():
         highlightthickness=0,
         highlightbackground="#414141",
         highlightcolor="#414141",
-        command=lambda: print("Password Log Files clicked")  # Replace with actual functionality
+        command=drawFileMenu  # Replace with actual functionality
     )
     logFilesButton.place(
         x=(600 - button_width) // 2,  # Center horizontally
@@ -323,6 +278,7 @@ def drawPasswordMenu():
 
     # Load the back button image
     global backButtonImage  # Keep a reference to the image to prevent garbage collection
+
     backButtonImage = PhotoImage(file="./gui/backbutton.png")
 
     # Add the Back Button
@@ -364,25 +320,13 @@ def drawPasswordMenu():
         bg="#414141",  # Darker background for dark mode
         fg="#ffffff",  # White text for contrast
         highlightthickness=0,
-        command=lambda: print("One Time Password Generator clicked")  # Replace with actual functionality
+        command= drawOTPQuestionScreen
     )
     otpButton.place(
         relx=0.5, y=start_y + button_height + button_spacing, anchor="center", width=button_width, height=button_height
     )
 
-    # Password Strength Checker Button
-    strengthCheckerButton = tk.Button(
-        window,
-        text="Password Strength Checker",
-        font=("Helvetica", 14),
-        bg="#414141",  # Darker background for dark mode
-        fg="#ffffff",  # White text for contrast
-        highlightthickness=0,
-        command=lambda: print("Password Strength Checker clicked")  # Replace with actual functionality
-    )
-    strengthCheckerButton.place(
-        relx=0.5, y=start_y + 2 * (button_height + button_spacing), anchor="center", width=button_width, height=button_height
-    )
+# ADD THE ENTROPY CHECKER FUNCTION DOWN THE LINE
 
 def drawQuestionScreen():
     # Clear the window
@@ -464,9 +408,140 @@ def drawQuestionScreen():
     )
     nextButton.place(relx=0.5, y=300, anchor="center", width=100, height=40)
 
+    backButton = tk.Button(
+        window,
+        text="Back to Menu",
+        font=("Helvetica", 14),
+        bg="#414141",
+        fg="#ffffff",
+        highlightthickness=0,
+        command=drawPasswordMenu,  # Navigate back to the password menu
+    )
+    backButton.place(relx=0.5, y=400, anchor="center", width=150, height=40)
+
     # Start with the first question
     nextQuestion()
 
+def drawOTPQuestionScreen():
+    windowUpdate()
+
+    # Add a title
+    titleLabel = tk.Label(
+        window,
+        text="Enter the OTP length:",
+        font=("Helvetica", 20, "bold"),
+        fg="#ffffff",
+        bg="#313131",
+    )
+    titleLabel.place(relx=0.5, y=50, anchor="center")
+
+    # Add an entry widget for user input
+    entry = tk.Entry(
+        window,
+        font=("Helvetica", 14),
+        bg="#414141",
+        fg="#ffffff",
+        insertbackground="#ffffff",  # Cursor color
+        highlightthickness=0,
+    )
+    entry.place(relx=0.5, y=200, anchor="center", width=400, height=30)
+
+    # Function to handle the Enter key press
+    def handleEnter(event=None):
+        try:
+            otp_length = int(entry.get())  # Get the OTP length from the entry field
+            entry.delete(0, tk.END)  # Clear the entry field
+            generateOTP(otp_length)  # Call the OTP generation function
+        except ValueError:
+            print("Not a valid entry; defaulting to 12")  # Handle invalid input
+            generateOTP()
+        drawOTPanswer()
+
+    # Bind the Enter key to the handleEnter function
+    entry.bind("<Return>", handleEnter)
+
+    # Add a "Generate OTP" button
+    generateButton = tk.Button(
+        window,
+        text="Generate OTP",
+        font=("Helvetica", 14),
+        bg="#414141",
+        fg="#ffffff",
+        highlightthickness=0,
+        command=handleEnter,  # Call handleEnter when clicked
+    )
+    generateButton.place(relx=0.5, y=300, anchor="center", width=150, height=40)
+
+    # Add a "Back to Menu" button
+    backButton = tk.Button(
+        window,
+        text="Back to Menu",
+        font=("Helvetica", 14),
+        bg="#414141",
+        fg="#ffffff",
+        highlightthickness=0,
+        command=drawPasswordMenu,  # Navigate back to the password menu
+    )
+    backButton.place(relx=0.5, y=400, anchor="center", width=150, height=40)
+    
+def drawOTPanswer():
+    windowUpdate()
+
+    # Add a title
+    titleLabel = tk.Label(
+        window,
+        text="One Time Password:",
+        font=("Helvetica", 20, "bold"),
+        fg="#ffffff",
+        bg="#313131",
+    )
+    titleLabel.place(relx=0.5, y=50, anchor="center")
+
+    passwordLabel = tk.Label(
+        window,
+        text=f"Your password is:\n{OTPGenerator}",
+        font=("Helvetica", 16, "bold"),
+        fg="#ffffff",
+        bg="#313131",
+        wraplength=500,
+        justify="center",
+    )
+    passwordLabel.place(relx=0.5, y=150, anchor="center")
+
+    # Create and display the entropy and strength label
+    entropyLabel = tk.Label(
+        window,
+        text=f"Entropy Score: {entropy:.2f}\nPassword Strength: {strength}",
+        font=("Helvetica", 14),
+        fg="#ffffff",
+        bg="#313131",
+        justify="center",
+    )
+    entropyLabel.place(relx=0.5, y=250, anchor="center")
+
+    # Add a "Save Password" button
+    saveButton = tk.Button(
+        window,
+        text="Save Password",
+        font=("Helvetica", 14),
+        bg="#414141",
+        fg="#ffffff",
+        highlightthickness=0,
+        command=lambda: saveOTP(OTPGenerator, entropy, strength)
+    )
+    saveButton.place(relx=0.5, y=350, anchor="center", width=150, height=40)
+
+        # Add a "Back to Menu" button
+    backButton = tk.Button(
+        window,
+        text="Back to Menu",
+        font=("Helvetica", 14),
+        bg="#414141",
+        fg="#ffffff",
+        highlightthickness=0,
+        command=drawPasswordMenu,
+    )
+    backButton.place(relx=0.5, y=470, anchor="center", width=150, height=40)
 
 def generatePassword(answers):
     # Shuffle and combine the answers to create the password
@@ -515,7 +590,6 @@ def generatePassword(answers):
     )
     saveButton.place(relx=0.5, y=350, anchor="center", width=150, height=40)
 
-
     # Add a "Back to Menu" button
     backButton = tk.Button(
         window,
@@ -528,7 +602,64 @@ def generatePassword(answers):
     )
     backButton.place(relx=0.5, y=470, anchor="center", width=150, height=40)
 
+def drawFileMenu():
+    windowUpdate()
 
+    titleLabel = tk.Label(
+        window,
+        text="Log Files",
+        font=("Helvetica", 40, "bold"),
+        fg="#ffffff",
+        bg="#313131",
+    )
+    titleLabel.place(relx=0.5, y=100, anchor="center")
+
+    openGeneratedPasswordButton = tk.Button(
+        window,
+        text="Open Generated Password log",
+        font=("Helvetica", 14),
+        bg="#414141",
+        fg="#ffffff",
+        highlightthickness=0,
+        command= opengeneratedpass
+    )
+    openGeneratedPasswordButton.place(relx=0.5, y=220, anchor="center", width=500, height=40)
+
+    openOTPPasswordButton = tk.Button(
+        window,
+        text="Open One Time Password Log",
+        font=("Helvetica", 14),
+        bg="#414141",
+        fg="#ffffff",
+        highlightthickness=0,
+        command= opengeneratedotp
+    )
+    openOTPPasswordButton.place(relx=0.5, y=300, anchor="center", width=500, height=40)
+
+    cleanUpFiles = tk.Button(
+        window,
+        text="Clean up log files",
+        font=("Helvetica", 14),
+        bg="#414141",
+        fg="#ffffff",
+        highlightthickness=0,
+        command= cleanupfunc 
+    )
+    cleanUpFiles.place(relx=0.5, y=380, anchor="center", width=500, height=40)
+
+    # Load the back button image
+    global backButtonImage  # Keep a reference to the image to prevent garbage collection
+    backButtonImage = PhotoImage(file="./gui/backbutton.png")
+
+    backButton = tk.Button(
+        window,
+        image= backButtonImage,  # Use the image for the button
+        bg="#313131",  # Match the background color
+        highlightthickness=0,  # Remove white highlight
+        bd=0,  # Remove border
+        command=drawMainMenu  # Navigate back to the main menu
+    )
+    backButton.place(x=10, y=10, width=40, height=40)  # Place in the top-left corner
 
 drawMainMenu()
 
