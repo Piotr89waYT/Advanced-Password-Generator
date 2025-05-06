@@ -88,7 +88,7 @@ def savePassword(password: str, entropy: float, strength: str):
 def saveOTP(OTPGenerator: str, entropy: float, strength: str):
     try:
         print("Saving password...")
-        with open("LoggedOTPsS.txt", "a") as f:
+        with open("LoggedOTPs.txt", "a") as f:
             x = datetime.datetime.now()
             f.write(
                 f"Password Generated on: {x.strftime('%a %d %b %y. At: %H:%M')} "
